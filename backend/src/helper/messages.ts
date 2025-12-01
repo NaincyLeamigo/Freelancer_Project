@@ -3,7 +3,11 @@ export const msg = {
         error: "Something went wrong. Please try after sometime.",
         requiredField: "Please provide all required fields",
         registrationCodeMailSub: "Registration Code",
-        emailError: "Unable to send mail"
+        emailError: "Unable to send mail",
+        validation: "Validation failed" 
+    },
+    validation: {
+        missing_fields: "Required fields are missing",
     },
     common: {
         success: "Records created successfully.",
@@ -21,6 +25,7 @@ export const msg = {
         somethingWentWrong: 'Something went wrong!',
         emptyBody: 'Empty body',
         badRequest: "bad request.",
+        requiredField: "Please provide all required fields",
         
     },
     token: {
@@ -30,6 +35,13 @@ export const msg = {
         error: 'Error in verifying the token!!',
         accessDenied: "access denied",
         logout: "User logged out successfully",
+        refresh_success: "Token refreshed successfully"
+    },
+       auth: {
+        signup_success: "Signup successful",
+        login_success: "Login successful",
+        login_failed: "Invalid email or password",
+        logout_success: "Logout successful",
     },
     user: {
         success: "User created successfully",

@@ -7,6 +7,8 @@ import pino from "pino-http";
 import { initDataSources } from "./config/data-source";
 import { expressPort, redisConfig, SENTRY_DSN } from "./config/config";
 import { initSentry } from "./config/sentry";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth.routes";
 
 export const app = express();
 
@@ -19,11 +21,14 @@ if (process.env.SENTRY_DSN) {
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use(cors({
-    origin: "*",
-    credentials: true,
-}));
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // ----- LOGGER -----
 app.use(pino());
@@ -46,6 +51,7 @@ redisClient.on('error', (err: Error) => {
 app.set("redisClient", redisClient);
 
 // ----- ROUTES -----
+app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
     res.send("Backend Running Successfully 🚀");
 });
