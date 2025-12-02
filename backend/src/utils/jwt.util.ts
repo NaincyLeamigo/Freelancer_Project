@@ -3,6 +3,7 @@ import { jwtSignIN } from "../config/config";
 
 
 export const TokenUtil = {
+  // done
   generateAccessToken(payload: object, expiresIn?: string) {
     return jwt.sign(
       payload,
@@ -13,10 +14,12 @@ export const TokenUtil = {
     );
   },
 
+  // done
   verifyAccessToken(token: string) {
     return jwt.verify(token, jwtSignIN.secret as string);
   },
 
+  // done
   generateRefreshToken(payload: object) {
     return jwt.sign(
       payload,
@@ -26,6 +29,7 @@ export const TokenUtil = {
       } as jwt.SignOptions
     );
 },
+ // done
   verifyRefreshToken(token: string) {
     return jwt.verify(token, jwtSignIN.secret as string);
   }

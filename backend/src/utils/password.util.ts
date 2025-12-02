@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt";
 
 export const Hash = {
   async hashPassword(plain: string) {
@@ -10,3 +10,4 @@ export const Hash = {
     return bcrypt.compare(plain, hashed);
   }
 };
+

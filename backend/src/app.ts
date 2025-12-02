@@ -1,13 +1,13 @@
 import "reflect-metadata";
-import express from "express";
-import compression from "compression";
-import cors from "cors";
+import * as express from "express";
+import * as compression from "compression";
+import * as cors from "cors";
+import * as cookieParser from "cookie-parser";
 import Redis from "ioredis";
 import pino from "pino-http";
 import { initDataSources } from "./config/data-source";
 import { expressPort, redisConfig, SENTRY_DSN } from "./config/config";
 import { initSentry } from "./config/sentry";
-import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes";
 
 export const app = express();
@@ -52,9 +52,9 @@ app.set("redisClient", redisClient);
 
 // ----- ROUTES -----
 app.use("/api/auth", authRoutes);
-app.get("/", (req, res) => {
-    res.send("Backend Running Successfully 🚀");
-});
+// app.get("/", (req, res) => {
+//     res.send("Backend Running Successfully 🚀");
+// });
 
 // ----- 404 -----
 app.use((req, res) => {

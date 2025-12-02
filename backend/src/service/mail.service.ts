@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 
 
 const transporter = nodemailer.createTransport({
@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
+// done
 export const sendMail = async (to: string, subject: string, html: string) => {
     try {
         await transporter.sendMail({

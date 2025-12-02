@@ -5,6 +5,7 @@ import { msg } from "../helper/messages";
 
 
 export const AuthController = {
+  // done
   async signup(req: Request, res: Response) {
     try {
       const { email, password, role } = req.body;
@@ -23,6 +24,7 @@ export const AuthController = {
     }
   },
 
+  // done
   async signin(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -53,19 +55,21 @@ export const AuthController = {
     }
   },
 
-async refreshToken(req: Request, res: Response) {
-  try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return responseStatus(res, 400, "Refresh token required", null);
+  // done
+  async refreshToken(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.body;
+      if (!refreshToken) {
+        return responseStatus(res, 400, "Refresh token required", null);
+      }
+      const data = await AuthService.refresh({ refreshToken });
+      return responseStatus(res, 200, "Tokens refreshed", data);
+    } catch (err: any) {
+      return responseStatus(res, 401, err.message || "Invalid token", null);
     }
-    const data = await AuthService.refresh({ refreshToken });
-    return responseStatus(res, 200, "Tokens refreshed", data);
-  } catch (err: any) {
-    return responseStatus(res, 401, err.message || "Invalid token", null);
-  }
-},
+  },
 
+  // done
   async logout(req: Request, res: Response) {
     try {
       const { refreshToken } = req.body;
@@ -83,6 +87,7 @@ async refreshToken(req: Request, res: Response) {
     }
   },
 
+  // done
   async verifyEmail(req: Request, res: Response) {
     try {
       const token = req.query.token as string || req.body.token;
@@ -93,24 +98,25 @@ async refreshToken(req: Request, res: Response) {
       return responseStatus(res, 400, err.message || "Verification failed", null);
     }
   },
-  async forgotPassword(req: Request, res: Response) {
-  try {
-    const { email } = req.body;
-    await AuthService.forgotPassword(email);
-    // ✅ Always return success (security best practice)
-    return responseStatus(res, 200, "If email exists, reset link has been sent", null);
-  } catch (err: any) {
-    return responseStatus(res, 500, "Request failed", null);
-  }
-},
 
-async resetPassword(req: Request, res: Response) {
-  try {
-    const { token, newPassword } = req.body;
-    await AuthService.resetPassword(token, newPassword);
-    return responseStatus(res, 200, "Password reset successfully", null);
-  } catch (err: any) {
-    return responseStatus(res, 400, err.message, null);
+  async forgotPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      await AuthService.forgotPassword(email);
+      // ✅ Always return success (security best practice)
+      return responseStatus(res, 200, "If email exists, reset link has been sent", null);
+    } catch (err: any) {
+      return responseStatus(res, 500, "Request failed", null);
+    }
+  },
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const { token, newPassword } = req.body;
+      await AuthService.resetPassword(token, newPassword);
+      return responseStatus(res, 200, "Password reset successfully", null);
+    } catch (err: any) {
+      return responseStatus(res, 400, err.message, null);
+    }
   }
-}
 };
