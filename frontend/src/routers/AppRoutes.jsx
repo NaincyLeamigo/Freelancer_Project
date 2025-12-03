@@ -1,10 +1,16 @@
 
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home.jsx';
-import Profile from '../pages/Profile.jsx';
+import SetupProfile from '../pages/Profile.jsx';
+
 import CreateAccount from '../components/signup/FreelancerSignUp.jsx'
 import SignIn from '../components/signin/Login.jsx'
 import VerifyCode from '../components/verification/Verify.jsx'
+import ProfileInformation from '../components/freelanceronboarding/ProfileInformation.jsx';
+import ProfessionalDetails from '../components/freelanceronboarding/ProfessionalInformation.jsx';
+import Availability from '../components/freelanceronboarding/Availability.jsx';
+
+
 
 export default function AppRoutes() {
   return (
@@ -13,7 +19,11 @@ export default function AppRoutes() {
       <Route path="/create-account" element={<CreateAccount />} />
       <Route path="/login" element={<SignIn />} />
       <Route path="/verify-otp" element={<VerifyCode/>} />
-      <Route path="/profile" element={<Profile/>} />
+      <Route path="/setup-profile" element={<SetupProfile />} />
+      <Route path="/profile-information" element={<ProfileInformation />} />
+      <Route path="/professional-details" element={<ProfessionalDetails/>} />
+       <Route path="/availability" element={<Availability />} />
+   
     </Routes>
   );
 }

@@ -23,7 +23,7 @@ export default function VerifyCode() {
       });
 
       alert("Email verified successfully!");
-      navigate("/login");
+      navigate("/setup-profile");
 
     } catch (err) {
       alert(err.response?.data?.message || "Invalid OTP");
@@ -42,8 +42,8 @@ export default function VerifyCode() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-sm p-8">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8">
         <div className="mb-8">
           <BackButton />
         </div>
