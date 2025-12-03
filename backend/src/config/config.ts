@@ -59,6 +59,7 @@ export const redisConfig = {
 };
 
 
+
 // ------------------- JWT -----------------------
 export const jwtSignIN = { 
     refreshTokenExpiredTime: envVal('REFRESH_TOKEN_EXPIRED_TIME', '10d'),

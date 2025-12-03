@@ -31,7 +31,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // ----- LOGGER -----
-app.use(pino());
+// app.use(pino());
 
 // ----- REDIS -----
 const redisPrefix = process.env.REDIS_PREFIX || "skyofficeproject:";

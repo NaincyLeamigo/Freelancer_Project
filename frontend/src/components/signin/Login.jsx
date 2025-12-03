@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import SocialButton from '../ui/SocialButton';
 import Checkbox from '../ui/Checkbox';
 import BackButton from '../ui/BackButton';
+import { signinAPI } from '../../api/authapi';
 
 function SignIn() {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,10 +25,31 @@ function SignIn() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log('Login attempt:', formData);
+  //   // Yahan aap login API call kar sakti hain
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
-    // Yahan aap login API call kar sakti hain
+
+    try {
+      const res = await signinAPI({
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log("LOGIN SUCCESS:", res.data);
+      const { accessToken, refreshToken } = res.data.data.tokens;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      navigate("/profile");
+    } catch (err) {
+      console.log("LOGIN ERROR:", err.response?.data);
+      alert(err.response?.data?.message || "Login failed");
+    }
   };
 
   return (

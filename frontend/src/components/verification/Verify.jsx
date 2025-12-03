@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import BackButton from "../ui/BackButton"
 import OtpInput from "../ui/OtpInput"
+import { verifyOtpAPI } from "../../api/authapi"
 
 export default function VerifyCode() {
   const [otp, setOtp] = useState("")
@@ -12,15 +13,22 @@ export default function VerifyCode() {
   const [searchParams] = useSearchParams()
   const email = searchParams.get("email") || "example@gmail.com"
 
-  const handleVerify = (e) => {
-    e.preventDefault()
+  const handleVerify = async (e) => {
+    e.preventDefault();
 
-    if (otp.length === 4) {
-      console.log("Verifying OTP:", otp)
-      // Add your verification logic here
-      // navigate('/success'); // Navigate after successful verification
+    try {
+      const res = await verifyOtpAPI({
+        email,
+        otp
+      });
+
+      alert("Email verified successfully!");
+      navigate("/login");
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Invalid OTP");
     }
-  }
+  };
 
   const handleResendCode = async () => {
     setIsResending(true)
@@ -34,8 +42,8 @@ export default function VerifyCode() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#F9F9F9] rounded-3xl shadow-sm p-8">
+    <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-sm p-8">
         <div className="mb-8">
           <BackButton />
         </div>

@@ -5,26 +5,19 @@ import { msg } from "../helper/messages";
 
 
 export const AuthController = {
-  // done
+
   async signup(req: Request, res: Response) {
     try {
       const { email, password, role } = req.body;
       const result = await AuthService.signup({ email, password, role });
-
-      // send verification link via email (you should implement sendEmail)
-      // For now return verifyToken in body (in prod, email it and do NOT return)
-      // TODO: call your mailer to send verification link
-      return responseStatus(res, 201, msg.common.success || "User created", {
-        userId: result.user._id,
-       ...(process.env.ENV === "dev" && { emailVerificationToken: result.verifyToken })
-      });
+      return responseStatus(res, 201, msg.auth.signup_success || "User created", result);
     } catch (err: any) {
       const message = err.message || "Signup failed";
       return responseStatus(res, 400, message, null);
     }
   },
 
-  // done
+
   async signin(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -38,7 +31,7 @@ export const AuthController = {
       });
 
       // Return tokens in body as well (or only refresh token)
-      return responseStatus(res, 200, msg.common.success || "Logged in", {
+      return responseStatus(res, 200, msg.auth.login_success || "Logged in", {
         user: {
           id: user._id,
           email: user.email,
@@ -69,7 +62,7 @@ export const AuthController = {
     }
   },
 
-  // done
+
   async logout(req: Request, res: Response) {
     try {
       const { refreshToken } = req.body;
@@ -81,23 +74,36 @@ export const AuthController = {
       await AuthService.logout({ userId, refreshToken });
       // clear cookie
       res.clearCookie("token");
-      return responseStatus(res, 200, msg.common.success || "Logged out", null);
+      return responseStatus(res, 200, msg.auth.logout_success || "Logged out", null);
     } catch (err: any) {
       return responseStatus(res, 500, err.message, null);
     }
   },
 
-  // done
+  async verifyOtp(req : Request, res : Response) {
+    try {
+      const { email, otp } = req.body;
+      const result = await AuthService.verifyOtp(email, otp);
+
+      return responseStatus(res, 200, "Email verified successfully", result);
+    } catch (err) {
+      return responseStatus(res, 400, err.message, null);
+    }
+  },
+
+
   async verifyEmail(req: Request, res: Response) {
     try {
       const token = req.query.token as string || req.body.token;
       if (!token) return responseStatus(res, 400, msg.server.requiredField || "Missing token", null);
       await AuthService.verifyEmail(token);
-      return responseStatus(res, 200, msg.common.success || "Email verified", null);
+      return responseStatus(res, 200, msg.user.emailVerified || "Email verified", null);
     } catch (err: any) {
       return responseStatus(res, 400, err.message || "Verification failed", null);
     }
   },
+
+
 
   async forgotPassword(req: Request, res: Response) {
     try {

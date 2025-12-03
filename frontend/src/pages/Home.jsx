@@ -13,14 +13,14 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            to="/create-account"
+            to="/create-account?role=freelancer"
             className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow hover:bg-indigo-700 transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
           >
             I'm a Freelancer
           </Link>
 
           <Link
-            to="/create-account"
+            to="/create-account?role=hirer"
             className="px-8 py-3 bg-white text-indigo-600 font-medium rounded-lg shadow border border-indigo-200 hover:bg-indigo-50 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
           >
             I'm a Hirer

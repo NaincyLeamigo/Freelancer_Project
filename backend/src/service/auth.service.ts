@@ -23,29 +23,26 @@ export const AuthService = {
           profileDocId = h._id;
       }
 
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
     const user = await AuthRepo.createUser({
       email,
       password: hashed,
       role,
       profileRef: profileDocId,
       isVerified: false,
+      emailVerificationOTP: otp,
+      otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
     });
 
-    // create verification token
-    const verifyToken = TokenUtil.generateAccessToken({ sub: user._id, action: "verify_email" });
-
-    // Send verification email (production)
-    const link = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${encodeURIComponent(verifyToken)}`;
-    const sent = await sendMail(
-    email,
-    "Verify your email",
-    `<p>Hello,</p><p>Please verify your email by clicking the link below:</p><p><a href="${link}">${link}</a></p>`
+    // Send OTP email
+    await sendMail(
+      email,
+      "Verify Your Account",
+      `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes</p>`
     );
-    // (Optional) store verification token somewhere or send via email
-    // We'll return token to controller for now (controller can call sendEmail)
+
     return {
-      user,
-      verifyToken: sent ? null : verifyToken, // if mail sent we don't return token; for dev we return token only if mail fails
+      user
     };
   },
 
@@ -104,6 +101,49 @@ export const AuthService = {
     return { ok: true };
   },
 
+  async verifyOtp(email: string, otp: string) {
+    const user = await AuthRepo.findUserByEmail(email);
+    if (!user) throw new Error("User not found");
+
+    if (user.isVerified)
+      throw new Error("Email already verified");
+
+    if (user.emailVerificationOTP !== otp)
+      throw new Error("Invalid OTP");
+
+    if (user.otpExpiry < new Date())
+      throw new Error("OTP expired");
+
+    // Mark user verified
+    await AuthRepo.markUserVerified(user._id);
+
+    // Clear OTP
+    user.emailVerificationOTP = null;
+    user.otpExpiry = null;
+    await user.save();
+
+    return { verified: true };
+},
+
+  // async verifyOtp( email: string, otp: string ) {
+  //   const user = await AuthRepo.findUserByEmail(email);
+  //   if (!user) throw new Error("User not found");
+
+  //   if (user.emailVerificationOTP !== otp)
+  //     throw new Error("Invalid OTP");
+
+  //   if (user.otpExpiry < new Date())
+  //     throw new Error("OTP expired");
+
+  //   // Mark user verified
+  //   user.isVerified = true;
+  //   user.emailVerificationOTP = null;
+  //   user.otpExpiry = null;
+
+  //   await user.save();
+
+  //   return { verified: true };
+  //  },
   //done
   async verifyEmail(token: string) {
     try {

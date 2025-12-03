@@ -20,6 +20,8 @@ export const AuthRepo = {
     role: "freelancer" | "hirer";
     profileRef?: mongoose.Types.ObjectId | null;
     isVerified?: boolean;
+    emailVerificationOTP?: string;
+    otpExpiry?: Date;
   }) {
     const user = new User(payload);
     return user.save();
@@ -52,9 +54,9 @@ export const AuthRepo = {
   },
 
   // done
-  async markUserVerified(userId: string) {
-    return User.findByIdAndUpdate(userId, { isVerified: true }, { new: true }).exec();
-  },
+async markUserVerified(userId: string | mongoose.Types.ObjectId) {
+  return User.findByIdAndUpdate(userId, { isVerified: true }, { new: true }).exec();
+},
   
   async updateUserPassword(userId: string, hashedPassword: string) {
     return User.findByIdAndUpdate(

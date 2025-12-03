@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link,useNavigate,useSearchParams } from 'react-router-dom';
 import BackButton from '../ui/BackButton';
 
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import SocialButton from '../ui/SocialButton';
 import Checkbox from '../ui/Checkbox';
+import { signupAPI } from '../../api/authapi';
 
 function CreateAccount() {
  const navigate = useNavigate()
+ const [searchParams] = useSearchParams();
+  const role = searchParams.get("role") || "freelancer"; 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,12 +29,29 @@ function CreateAccount() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData)
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Form submitted:", formData)
 
-    // Navigate to verify code page with email
-    navigate(`/verify-code?email=${encodeURIComponent(formData.email)}`)
+  //   // Navigate to verify code page with email
+  //   navigate(`/verify-code?email=${encodeURIComponent(formData.email)}`)
+  // };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await signupAPI({
+        email: formData.email,
+        password: formData.password,
+        role: role,
+      });
+
+      alert("OTP sent to your email. Please check inbox");
+      navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
+    } catch (err) {
+      alert(err.response?.data?.message || "Signup failed");
+    }
   };
 
   const handleSocialSignup = (provider) => {

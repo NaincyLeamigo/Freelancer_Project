@@ -1,10 +1,11 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { jwtSignIN } from "../config/config";
 
 
 export const TokenUtil = {
   // done
   generateAccessToken(payload: object, expiresIn?: string) {
+    // console.log("JWT SECRET =>", jwtSignIN.secret);
     return jwt.sign(
       payload,
       jwtSignIN.secret as string,
