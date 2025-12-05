@@ -1,4 +1,4 @@
-export const responseStatus = (res: any, status: any, message: any, data: any) => {
+export const responseStatus = (res: any, status: any, message: any,  data?: any) => {
 	 if (status >= 200 && status < 300) {
 		res.status(status).json({
 		statusMessage: "Success",

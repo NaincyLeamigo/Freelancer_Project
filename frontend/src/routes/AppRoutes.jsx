@@ -1,14 +1,16 @@
 
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home.jsx';
-import SetupProfile from '../pages/Profile.jsx';
+import Home from '../pages/home/Home.jsx';
+import SetupProfile from '../pages/freelancer/SetUp.jsx';
 
-import CreateAccount from '../components/signup/FreelancerSignUp.jsx'
-import SignIn from '../components/signin/Login.jsx'
-import VerifyCode from '../components/verification/Verify.jsx'
+import CreateAccount from '../pages/auth/CreateAccount.jsx'
+import SignIn from '../pages/auth/Login.jsx'
+import VerifyCode from '../pages/auth/VerificationOtp.jsx'
 import ProfileInformation from '../components/freelanceronboarding/ProfileInformation.jsx';
 import ProfessionalDetails from '../components/freelanceronboarding/ProfessionalInformation.jsx';
 import Availability from '../components/freelanceronboarding/Availability.jsx';
+import ActivateProfile from '../components/freelanceronboarding/ActivateProfile.jsx';
+import ProfileComplete from '../components/freelanceronboarding/ProfileComplete.jsx';
 
 
 
@@ -23,6 +25,8 @@ export default function AppRoutes() {
       <Route path="/profile-information" element={<ProfileInformation />} />
       <Route path="/professional-details" element={<ProfessionalDetails/>} />
        <Route path="/availability" element={<Availability />} />
+       <Route path="/activate" element={<ActivateProfile />} />
+       <Route path="/profile-complete" element={<ProfileComplete/>} />
    
     </Routes>
   );

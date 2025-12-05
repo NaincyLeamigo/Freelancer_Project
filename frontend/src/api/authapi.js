@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "./Api";
 
 // ------------ SIGNUP --------------
 export const signupAPI = (payload) => {
@@ -13,6 +13,10 @@ export const signinAPI = (payload) => {
 // ------------ VERIFY OTP --------------
 export const verifyOtpAPI = (payload) => {
   return api.post("/api/auth/verify-otp", payload); 
+};
+
+export const resendOtpAPI = (email) => {
+  return api.post("/api/auth/resend-otp", { email });
 };
 
 // ------------ REFRESH TOKEN --------------

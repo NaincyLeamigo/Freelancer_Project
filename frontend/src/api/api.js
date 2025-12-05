@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import axios from "axios";
-import { errorInterceptor } from "./interceptor";
+import { errorInterceptor } from "./Interceptor";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,

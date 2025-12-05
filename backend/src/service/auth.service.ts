@@ -4,6 +4,8 @@ import { TokenUtil } from "../utils/jwt.util";
 import { responseStatus } from "../helper/response";
 import { jwtSignIN } from "../config/config";
 import { sendMail } from "./mail.service";
+import { otpTemplate } from "../templates/otp.template";
+import { verifyAccountTemplate } from "../templates/verifyaccount.template";
 
 export const AuthService = {
   //done
@@ -34,12 +36,12 @@ export const AuthService = {
       otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
     });
 
-    // Send OTP email
+    
     await sendMail(
-      email,
-      "Verify Your Account",
-      `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes</p>`
-    );
+    email,
+    "Verify Your SkyOffice Account",
+    verifyAccountTemplate(otp)
+  );
 
     return {
       user
@@ -125,25 +127,28 @@ export const AuthService = {
     return { verified: true };
 },
 
-  // async verifyOtp( email: string, otp: string ) {
-  //   const user = await AuthRepo.findUserByEmail(email);
-  //   if (!user) throw new Error("User not found");
+  async resendOtp(email: string) {
+    const user = await AuthRepo.findUserByEmail(email);
+    if (!user) throw new Error("User not found");
 
-  //   if (user.emailVerificationOTP !== otp)
-  //     throw new Error("Invalid OTP");
+    if (user.isVerified)
+      throw new Error("Email already verified");
 
-  //   if (user.otpExpiry < new Date())
-  //     throw new Error("OTP expired");
+    const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
-  //   // Mark user verified
-  //   user.isVerified = true;
-  //   user.emailVerificationOTP = null;
-  //   user.otpExpiry = null;
+    user.emailVerificationOTP = newOtp;
+    user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+    await user.save();
 
-  //   await user.save();
+    // Send Email With Beautiful HTML Template
+    await sendMail(
+      email,
+      "Your OTP Code",
+      otpTemplate(newOtp)
+    );
 
-  //   return { verified: true };
-  //  },
+    return { sent: true };
+  },
   //done
   async verifyEmail(token: string) {
     try {

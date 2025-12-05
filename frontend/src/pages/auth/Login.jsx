@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
-import SocialButton from '../ui/SocialButton';
-import Checkbox from '../ui/Checkbox';
-import BackButton from '../ui/BackButton';
-import { signinAPI } from '../../api/authapi';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
+import SocialButton from '../../components/ui/SocialButton';
+import Checkbox from '../../components/ui/Checkbox';
+import BackButton from '../../components/ui/BackButton';
+import { signinAPI } from '../../api/AuthApi';
+import { showAppToast } from '../../utils/Toast';
 
 function SignIn() {
   const navigate = useNavigate(); 
@@ -16,6 +17,7 @@ function SignIn() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,22 +35,34 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  if (!formData.email || !formData.password) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    setLoading(true); 
     try {
       const res = await signinAPI({
         email: formData.email,
         password: formData.password,
       });
-      console.log("LOGIN SUCCESS:", res.data);
+      // console.log("LOGIN SUCCESS:", res.data);
       const { accessToken, refreshToken } = res.data.data.tokens;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
-      navigate("/profile");
+      if (showAppToast) {
+        showAppToast('Login successfully','success');
+      } else {
+        alert("Login successfully");
+      }
+      navigate("/profile-information");
     } catch (err) {
       console.log("LOGIN ERROR:", err.response?.data);
       alert(err.response?.data?.message || "Login failed");
+    }
+    finally {
+      setLoading(false); 
     }
   };
 
@@ -73,6 +87,7 @@ function SignIn() {
             placeholder="example@gmail.com"
             value={formData.email}
             onChange={handleChange}
+            disabled={loading} 
           />
 
           <div className="relative">
@@ -84,12 +99,20 @@ function SignIn() {
               value={formData.password}
               onChange={handleChange}
               showPassword={showPassword}
-              onTogglePassword={() => setShowPassword(!showPassword)}
+              onTogglePassword={() => !loading && setShowPassword(!showPassword)}
+              disabled={loading} 
             />
             <div className="text-right mt-1">
-              <Link
+              {/* <Link
                 to="/forgot-password"
                 className="text-sm text-indigo-600 hover:text-indigo-700"
+              >
+                Forgot password?
+              </Link> */}
+               <Link
+                to="/forgot-password"
+                className={`text-sm ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
+                onClick={(e) => loading && e.preventDefault()} 
               >
                 Forgot password?
               </Link>
@@ -102,11 +125,12 @@ function SignIn() {
               checked={formData.rememberMe}
               onChange={handleChange}
               label="Remember me"
+               disabled={loading}
             />
           </div>
 
-          <Button type="submit" fullWidth>
-            Sign In
+          <Button type="submit" fullWidth  disabled={loading} >
+            {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
 
@@ -121,14 +145,21 @@ function SignIn() {
           </div>
 
           <div className="mt-6 flex justify-center gap-4">
-            <SocialButton provider="apple" />
-            <SocialButton provider="google" />
+            {/* <SocialButton provider="apple" /> */}
+            <SocialButton provider="google" disabled={loading}/>
           </div>
         </div>
 
         <p className="mt-8 text-center text-gray-600">
           Don’t have an account?{' '}
-          <Link to="/create-account" className="text-indigo-600 hover:text-indigo-700 font-medium">
+          {/* <Link to="/create-account" className="text-indigo-600 hover:text-indigo-700 font-medium">
+            Sign up
+          </Link> */}
+           <Link 
+            to="/create-account" 
+            className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700 font-medium'}`}
+            onClick={(e) => loading && e.preventDefault()} 
+          >
             Sign up
           </Link>
         </p>

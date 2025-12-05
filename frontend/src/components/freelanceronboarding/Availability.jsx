@@ -2,20 +2,21 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { saveAvailabilityAPI } from "../../api/FreelancerProfileAPI"
 
 export default function Availability() {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    timezone: "GMT +5:30 - India Standard Time",
-    workingDays: ["Mon", "Tue", "Wed", "Thu"],
-    startTime: "9:00 AM",
-    endTime: "6:00 PM",
-    allowInstantAudio: true,
-    allowInstantVideo: false,
+   timezone: "GMT +5:30 - India Standard Time",
+  workingDays: [], 
+  startTime: "9:00 AM",
+  endTime: "6:00 PM",
+  allowInstantAudio: false,
+  allowInstantVideo: false,
   })
 
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
 
   const timezones = [
     "GMT +5:30 - India Standard Time",
@@ -62,39 +63,62 @@ export default function Availability() {
     }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Availability data:", formData)
-    // Navigate to next step or dashboard
-    navigate("/dashboard")
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  
+  const payload = {
+    status: "Available", 
+    timeZone: formData.timezone,
+    workingDays: formData.workingDays,
+    startTime: formData.startTime,
+    endTime: formData.endTime,
+    allowInstantAudio: formData.allowInstantAudio,
+    allowInstantVideo: formData.allowInstantVideo,
+  };
+
+  console.log("Sending Availability Request:", payload);
+
+  try {
+    const res = await saveAvailabilityAPI(payload);
+    console.log("Availability Saved Successfully:", res.data);
+    navigate("/activate");
+  } catch (err) {
+    console.error("Error saving availability:", err.response?.data || err.message);
+    alert(err.response?.data?.message || "Failed to save availability");
   }
+};
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-2">
         {/* Header */}
-        <div className="bg-white px-6 py-4 flex items-center gap-4 sticky top-0 z-10 shadow-sm">
+        <div className="flex items-center justify-between gap-4 p-4 mb-4">
           <button onClick={() => navigate(-1)} className="text-gray-800 hover:text-gray-600">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-xl font-semibold text-gray-900">Set your availability</h1>
+          <h1 className="text-xl font-semibold text-gray-900 mr-6">Set your availability</h1>
+          <div></div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="px-6 py-6">
-          <div className="flex gap-2">
-            <div className="h-2 flex-1 bg-gray-400 rounded-full"></div>
-            <div className="h-2 flex-1 bg-gray-400 rounded-full"></div>
-            <div className="h-2 flex-1 bg-gray-400 rounded-full"></div>
-            <div className="h-2 flex-1 bg-gray-200 rounded-full"></div>
+       {/* Progress Bar */}
+      <div className="flex mb-8 w-full justify-center items-center">
+          <div className="flex gap-2 w-full ml-20 mr-20">
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
           </div>
         </div>
+       
+       
 
         <form onSubmit={handleSubmit} className="px-6 space-y-8">
           {/* Time Zone */}
-          <div>
+          <div className="">
             <label className="block text-lg font-semibold text-gray-900 mb-3">Time Zone</label>
             <select
               value={formData.timezone}
@@ -124,7 +148,7 @@ export default function Availability() {
                   key={day}
                   type="button"
                   onClick={() => toggleDay(day)}
-                  className={`px-8 py-3 rounded-full font-medium transition-all ${
+                  className={`px-6 py-1 rounded-full font-medium transition-all ${
                     formData.workingDays.includes(day)
                       ? "bg-indigo-600 text-white shadow-md"
                       : "bg-white text-gray-700 border border-gray-200"
@@ -185,25 +209,25 @@ export default function Availability() {
                 ))}
               </select>
             </div>
-            <p className="mt-3 text-sm text-gray-400">You can adjust these later in settings.</p>
+            <p className="mt-8 text-sm text-gray-400">You can adjust these later in settings.</p>
           </div>
 
           {/* Call Preferences */}
           <div>
             <label className="block text-lg font-semibold text-gray-900 mb-4">Call Preferences</label>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Allow Instant Audio */}
               <div className="flex items-center justify-between">
                 <span className="text-base text-gray-900">Allow Instant Audio</span>
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, allowInstantAudio: !formData.allowInstantAudio })}
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${
                     formData.allowInstantAudio ? "bg-indigo-600" : "bg-gray-300"
                   }`}
                 >
                   <span
-                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                       formData.allowInstantAudio ? "translate-x-7" : "translate-x-1"
                     }`}
                   />
@@ -216,12 +240,12 @@ export default function Availability() {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, allowInstantVideo: !formData.allowInstantVideo })}
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${
                     formData.allowInstantVideo ? "bg-indigo-600" : "bg-gray-300"
                   }`}
                 >
                   <span
-                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                       formData.allowInstantVideo ? "translate-x-7" : "translate-x-1"
                     }`}
                   />
@@ -232,8 +256,8 @@ export default function Availability() {
         </form>
 
         {/* Fixed Bottom Button */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white p-6 shadow-lg">
-          <div className="max-w-2xl mx-auto">
+        {/* <div className="fixed bottom-0 left-0 right-0 bg-white p-6 shadow-lg"> */}
+          <div className="max-w-2xl mx-auto mt-20">
             <button
               onClick={handleSubmit}
               className="w-full bg-indigo-600 text-white py-4 rounded-full font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-lg"
@@ -241,7 +265,7 @@ export default function Availability() {
               Next
             </button>
           </div>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   )

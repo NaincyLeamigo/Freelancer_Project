@@ -91,6 +91,16 @@ export const AuthController = {
     }
   },
 
+async resendOtp(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+    const result = await AuthService.resendOtp(email);
+    return responseStatus(res, 200, "New OTP sent successfully", result);
+  } catch (err: any) {
+    return responseStatus(res, 400, err.message, null);
+  }
+},
+
 
   async verifyEmail(req: Request, res: Response) {
     try {

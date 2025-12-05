@@ -1,23 +1,31 @@
 import mongoose, { Document } from "mongoose";
 
-export interface FreelancerProfileModel extends Document {
 
+export type SkillLevel = "Beginner" | "Intermediate" | "Expert";
+export type LanguageLevel = "Basic" | "Fluent" | "Native";
+export type WeekDay = "Sun" | "Mon" | "Tue" | "Wed" | "Thur" | "Fri" | "Sat";
+
+export interface FreelancerProfileModel extends Document {
   personalInfo: {
     fullName?: string;
     username?: string;
     phone?: string;
     avatar?: string;
-    location?: string;
-    website?: string;
+    city?: string;
+    country?: string;
+    oneLineDescription?: string;
+    description?: string;
+    jobTitle?: string;
   };
 
   professionalInfo: {
     title?: string;
     bio?: string;
-    category?: string;        
-    subCategory?: string;     
-    skills: { name: string; level: "Beginner" | "Intermediate" | "Expert" }[];
-    languages: { name: string; level: "Basic" | "Fluent" | "Native" }[];
+    category?: string;
+    subCategory?: string;
+    services: string[];
+    skills: { name: string; level: SkillLevel }[];
+    languages: { name: string; level: LanguageLevel }[];
   };
 
   experience: {
@@ -42,9 +50,9 @@ export interface FreelancerProfileModel extends Document {
   }[];
 
   portfolio: {
-    title: string;
+    title?: string;
     description?: string;
-    link?: string;
+    link: string;
     file?: string;
   }[];
 
@@ -57,6 +65,12 @@ export interface FreelancerProfileModel extends Document {
 
   availability: {
     status: "Available" | "Busy";
+    timeZone?: string;
+    workingDays: WeekDay[];
+    startTime: string;
+    endTime: string;
+    allowInstantAudio: boolean;
+    allowInstantVideo: boolean;
     hoursPerWeek?: number;
     hourlyRate?: number;
   };
@@ -82,21 +96,23 @@ export interface FreelancerProfileModel extends Document {
     lastSeen: Date;
   };
 
-  visibility: "Free" | "Premium"; 
-  isPaymentDone: boolean;         
-
+  visibility: "Free" | "Subscription";
+  isPaymentDone: boolean;
   profileStatus: "Draft" | "Published" | "Suspended";
 }
 
 const freelancerProfileSchema = new mongoose.Schema<FreelancerProfileModel>(
   {
     personalInfo: {
-      fullName: String,
+      fullName: { type: String, default: "" },
       username: { type: String, unique: true, sparse: true },
-      phone: String,
-      avatar: String,
-      location: String,
-      website: String,
+      phone: { type: String, default: "" },
+      avatar: { type: String, default: "" },
+      city: { type: String, default: "" },
+      country: { type: String, default: "" },
+      oneLineDescription: { type: String, default: "" },
+      description: { type: String, default: "" },
+      jobTitle: { type: String, default: "" },
     },
 
     professionalInfo: {
@@ -104,43 +120,48 @@ const freelancerProfileSchema = new mongoose.Schema<FreelancerProfileModel>(
       bio: String,
       category: String,
       subCategory: String,
+      services: [String],
       skills: [
-        { 
-          name: String, 
-          level: { type: String, enum: ["Beginner", "Intermediate", "Expert"] } 
+        {
+          name: String,
+          level: { type: String, enum: ["Beginner", "Intermediate", "Expert"] },
         },
       ],
       languages: [
-        { 
-          name: String, 
-          level: { type: String, enum: ["Basic", "Fluent", "Native"] } 
+        {
+          name: String,
+          level: { type: String, enum: ["Basic", "Fluent", "Native"] },
         },
       ],
     },
 
-    experience: [{
-      company: String,
-      role: String,
-      startDate: Date,
-      endDate: Date,
-      description: String,
-    }],
+    experience: [
+      {
+        company: String,
+        role: String,
+        startDate: Date,
+        endDate: Date,
+        description: String,
+      },
+    ],
 
-    education: [{
-      degree: String,
-      institution: String,
-      startDate: Date,
-      endDate: Date,
-    }],
+    education: [
+      {
+        degree: String,
+        institution: String,
+        startDate: Date,
+        endDate: Date,
+      },
+    ],
 
     certifications: [{ name: String, issuer: String, year: Number }],
 
     portfolio: [
       {
-        title: String,
-        description: String,
-        link: String,
-        file: String,
+        title: { type: String, default: "" },
+        description: { type: String, default: "" },
+        link: { type: String, required: true },
+        file: { type: String, default: "" },
       },
     ],
 
@@ -150,9 +171,22 @@ const freelancerProfileSchema = new mongoose.Schema<FreelancerProfileModel>(
       twitter: String,
       dribbble: String,
     },
-
     availability: {
       status: { type: String, enum: ["Available", "Busy"], default: "Available" },
+      timeZone: { type: String, default: "" },
+      workingDays: {
+        type: [
+          {
+            type: String,
+            enum: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+          },
+        ],
+        default: [],
+      },
+      startTime: { type: String, default: "9:00 AM" },
+      endTime: { type: String, default: "6:00 PM" },
+      allowInstantAudio: { type: Boolean, default: true },
+      allowInstantVideo: { type: Boolean, default: false },
       hoursPerWeek: Number,
       hourlyRate: { type: Number, default: 0 },
     },
@@ -180,9 +214,8 @@ const freelancerProfileSchema = new mongoose.Schema<FreelancerProfileModel>(
       lastSeen: { type: Date, default: Date.now },
     },
 
-    visibility: { type: String, enum: ["Free", "Premium"], default: "Free" },
+    visibility: { type: String, enum: ["Free", "Subscription"], default: "Free" },
     isPaymentDone: { type: Boolean, default: false },
-
     profileStatus: {
       type: String,
       enum: ["Draft", "Published", "Suspended"],

@@ -1,7 +1,7 @@
 "use client"
 
 import { useNavigate } from "react-router-dom"
-import Profile from "../img/SetUpImage.png"
+import Profile from "../../img/SetUpImage.png"
 
 export default function SetupProfile() {
   const navigate = useNavigate()
@@ -11,24 +11,30 @@ export default function SetupProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-sm p-8">
-        {/* Back Button */}
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8">
+        
 
-        <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-8">Set Up Your Profile</h1>
+      <div className="flex justify-between items-center">
+
+          {/* Back Button */}
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <h1 className="text-xl text-center text-gray-900">Set Up Your Profile</h1>
+          <div></div>
+      </div>
 
         {/* Illustration */}
-        <div className="flex justify-center mb-8">
-          <img src={Profile} alt="Profile Setup Illustration" className="w-64 h-auto" />
+        <div className="flex justify-center mb-2">
+          <img src={Profile} alt="Profile Setup Illustration" className="w-72 h-auto" />
         </div>
 
         {/* Description */}
-        <p className="text-center text-gray-500 mb-10 px-4">
+        <p className="text-center text-xl text-gray-500 mb-10 px-4">
           Let's create your professional profile so clients can discover you.
         </p>
 

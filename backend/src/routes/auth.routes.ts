@@ -12,6 +12,8 @@ router.post("/refresh-token", checkJwtToken, validateRequest(refreshTokenSchema)
 router.post("/logout",checkJwtToken, AuthController.logout);
 router.get("/verify-email", validateRequest(verifyEmailSchema), AuthController.verifyEmail);
 router.post("/verify-otp", AuthController.verifyOtp);
+router.post("/resend-otp", AuthController.resendOtp);
+
 
 router.post("/forgot-password", validateRequest(forgotPasswordSchema), AuthController.forgotPassword);
 router.post("/reset-password", validateRequest(resetPasswordSchema), AuthController.resetPassword);

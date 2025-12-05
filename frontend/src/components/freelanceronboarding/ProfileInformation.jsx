@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { saveBasicInfoAPI } from "../../api/FreelancerProfileAPI"
 
 export default function ProfileInformation() {
   const navigate = useNavigate()
@@ -34,40 +35,68 @@ export default function ProfileInformation() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Profile data:", formData)
-    navigate("/professional-details")
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+  //   console.log("Profile data:", formData)
+  //   navigate("/professional-details")
+  // }
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+ 
+    const payload = {
+      fullName: formData.fullName,
+      jobTitle: formData.jobTitle,
+      oneLineDescription: formData.headline, 
+      description: formData.about,          
+      city: formData.city,
+      country: formData.country,
+      avatar: profileImage || "", 
+    };
+
+    try {
+        const res = await saveBasicInfoAPI(payload);
+        console.log("Basic Info Saved Successfully:", res.data);
+        navigate("/professional-details");
+    } catch (err) {
+      console.error("Error saving basic info:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Failed to save basic info");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
-      <div className="max-w-2xl mx-auto px-4 py-6">
-        {/* Header */}
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8">
+ 
         <div className="flex items-center mb-6">
           <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="flex-1 text-center text-2xl font-semibold text-gray-900 -ml-10">Profile Information</h1>
+          <h1 className="flex-1 text-center text-2xl font-semibold text-gray-900 ">Profile Information</h1>
         </div>
 
-        <div className="flex gap-2 mb-8">
-          <div className="flex-1 h-2 bg-gray-700 rounded-full"></div>
-          <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
-          <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
+        <div className="flex mb-8 w-full justify-center items-center">
+          <div className="flex gap-2  w-full ml-16 mr-16">
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>
           {/* Profile Picture */}
           <div className="flex justify-center mb-8">
             <div className="relative">
-              <div className="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              <div className="w-36 h-36 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                 {profileImage ? (
                   <img src={profileImage || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <svg className="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-14 h-14 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 )}
@@ -198,12 +227,11 @@ export default function ProfileInformation() {
             </div>
           </div>
 
-          {/* Submit Button */}
+         
           <div className="mt-8">
             <button
               type="submit"
-              className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
+              className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
               Next
             </button>
           </div>

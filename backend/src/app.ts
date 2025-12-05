@@ -9,6 +9,7 @@ import { initDataSources } from "./config/data-source";
 import { expressPort, redisConfig, SENTRY_DSN } from "./config/config";
 import { initSentry } from "./config/sentry";
 import authRoutes from "./routes/auth.routes";
+import freelancerRoutes from "./routes/freelancer.routes";
 
 export const app = express();
 
@@ -52,6 +53,7 @@ app.set("redisClient", redisClient);
 
 // ----- ROUTES -----
 app.use("/api/auth", authRoutes);
+app.use("/api/freelancer", freelancerRoutes);
 // app.get("/", (req, res) => {
 //     res.send("Backend Running Successfully 🚀");
 // });
