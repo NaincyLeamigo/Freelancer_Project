@@ -5,11 +5,12 @@ import Button from '../../components/ui/Button';
 import SocialButton from '../../components/ui/SocialButton';
 import Checkbox from '../../components/ui/Checkbox';
 import BackButton from '../../components/ui/BackButton';
-import { signinAPI } from '../../api/AuthApi';
 import { showAppToast } from '../../utils/Toast';
+import { useAuth } from '../../context/AuthContext';
 
 function SignIn() {
   const navigate = useNavigate(); 
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,50 +20,86 @@ function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
    const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: type === 'checkbox' ? checked : value
+  //   }));
+  // };
 
-  // const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   console.log('Login attempt:', formData);
   //   // Yahan aap login API call kar sakti hain
   // };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  // if (!formData.email || !formData.password) {
+  //     alert('Please fill in all fields');
+  //     return;
+  //   }
+    
+  //   setLoading(true); 
+  //   try {
+  //     const res = await signinAPI({
+  //       email: formData.email,
+  //       password: formData.password,
+  //     });
+  //     // console.log("LOGIN SUCCESS:", res.data);
+  //     const { accessToken, refreshToken } = res.data.data.tokens;
+
+  //     localStorage.setItem("accessToken", accessToken);
+  //     localStorage.setItem("refreshToken", refreshToken);
+  //     if (showAppToast) {
+  //       showAppToast('Login successfully','success');
+  //     } else {
+  //       alert("Login successfully");
+  //     }
+  //     navigate("/profile-information");
+  //   } catch (err) {
+  //     console.log("LOGIN ERROR:", err.response?.data);
+  //     alert(err.response?.data?.message || "Login failed");
+  //   }
+  //   finally {
+  //     setLoading(false); 
+  //   }
+  // };
+
+
+    const handleChange = (e) => {
+      const { name, value, type, checked } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  if (!formData.email || !formData.password) {
-      alert('Please fill in all fields');
+    if (!formData.email || !formData.password) {
+      alert("Please fill in all fields");
       return;
     }
-    
-    setLoading(true); 
-    try {
-      const res = await signinAPI({
-        email: formData.email,
-        password: formData.password,
-      });
-      // console.log("LOGIN SUCCESS:", res.data);
-      const { accessToken, refreshToken } = res.data.data.tokens;
 
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      if (showAppToast) {
-        showAppToast('Login successfully','success');
+    setLoading(true);
+    try {
+      const user = await login(formData.email, formData.password);
+      if (user) {
+        showAppToast?.("Login successful", "success");
+        if (user.role === "freelancer") {
+          navigate("/profile-information");
+        } else if (user.role === "hirer") {
+          navigate("/explore-talent");
+        } else {
+          navigate("/");
+        }
       } else {
-        alert("Login successfully");
+        alert("Login failed");
       }
-      navigate("/profile-information");
     } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data);
-      alert(err.response?.data?.message || "Login failed");
-    }
-    finally {
-      setLoading(false); 
+      const msg = err?.response?.data?.message || err.message || "Login failed";
+      alert(msg);
+    } finally {
+      setLoading(false);
     }
   };
 

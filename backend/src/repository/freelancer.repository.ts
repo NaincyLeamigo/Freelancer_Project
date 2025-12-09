@@ -57,4 +57,12 @@ export const FreelancerProfileRepository = {
       { new: true }
     ).exec();
   },
+  
+  findAllWithFilters(query: any, sort: any) {
+    return FreelancerProfile.find(query)
+      .sort(sort)
+      .select("-__v")
+      .lean()
+      .exec();
+  },
 };

@@ -86,7 +86,7 @@
 // }
 
 
-"use client"
+
 
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
@@ -94,6 +94,7 @@ import BackButton from "../../components/ui/BackButton"
 import OtpInput from "../../components/ui/OtpInput"
 import { verifyOtpAPI, resendOtpAPI } from "../../api/AuthApi"
 import { showAppToast } from "../../utils/Toast"
+
 
 export default function VerifyCode() {
   const [otp, setOtp] = useState("")

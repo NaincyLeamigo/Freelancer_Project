@@ -6,49 +6,50 @@ import { jwtSignIN } from "../config/config";
 import { sendMail } from "./mail.service";
 import { otpTemplate } from "../templates/otp.template";
 import { verifyAccountTemplate } from "../templates/verifyaccount.template";
+import mongoose from "mongoose";
 
 export const AuthService = {
-  //done
-  async signup({ email, password, role }: { email: string; password: string; role: "freelancer" | "hirer"}) {
+
+  async signup({ email, password, role , name }: { email: string; password: string; role: "freelancer" | "hirer"; name : string}) {
     const existing = await AuthRepo.findUserByEmail(email);
     if (existing) {
       throw new Error("Email already registered");
     }
 
     const hashed = await Hash.hashPassword(password);
-    let profileDocId = null;
-    if (role === "freelancer") {
-      const p = await AuthRepo.createFreelancerProfile({});
-      profileDocId = p._id;
-      }else {
-          const h = await AuthRepo.createHirer({});
-          profileDocId = h._id;
-      }
-
     const otp = Math.floor(1000 + Math.random() * 9000).toString(); 
     const user = await AuthRepo.createUser({
       email,
       password: hashed,
       role,
-      profileRef: profileDocId,
+      name,
       isVerified: false,
       emailVerificationOTP: otp,
       otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
     });
+    let profileDocId: mongoose.Types.ObjectId;
 
-    
-    await sendMail(
-    email,
-    "Verify Your SkyOffice Account",
-    verifyAccountTemplate(otp)
-  );
+    if (role === "freelancer") {
+      const profile = await AuthRepo.createFreelancerProfile({ userId: user._id });
+      profileDocId = profile._id;
+    } else {
+      const profile = await AuthRepo.createHirer({ userId: user._id });
+      profileDocId = profile._id;
+    }
 
-    return {
-      user
-    };
-  },
+    user.profileRef = profileDocId;
+    await user.save();
 
-  // done
+      await sendMail(
+      email,
+      "Verify Your SkyOffice Account",
+      verifyAccountTemplate(otp)
+    );
+      return {
+        user
+      };
+    },
+
   async signin({ email, password }: { email: string; password: string }) {
     const user = await AuthRepo.findUserByEmail(email);
     if (!user) throw new Error("Invalid credentials");
@@ -60,9 +61,9 @@ export const AuthService = {
       throw new Error("Email not verified");
     }
 
+    await AuthRepo.clearAllRefreshTokens(user._id.toString());
     const accessToken = TokenUtil.generateAccessToken({ sub: user._id, role: user.role });
     const refreshToken = TokenUtil.generateRefreshToken({ sub: user._id });
-
     await AuthRepo.setRefreshToken(user._id.toString(), refreshToken);
 
     return {
@@ -72,7 +73,6 @@ export const AuthService = {
     };
   },
 
-  // done
   async refresh({ refreshToken }: { refreshToken: string }) {
     try {
       const payload: any = TokenUtil.verifyRefreshToken(refreshToken);
@@ -97,7 +97,6 @@ export const AuthService = {
     }
   },
 
-  // done
   async logout({ userId, refreshToken }: { userId: string; refreshToken: string }) {
     await AuthRepo.removeRefreshToken(userId, refreshToken);
     return { ok: true };
@@ -116,16 +115,14 @@ export const AuthService = {
     if (user.otpExpiry < new Date())
       throw new Error("OTP expired");
 
-    // Mark user verified
     await AuthRepo.markUserVerified(user._id);
 
-    // Clear OTP
     user.emailVerificationOTP = null;
     user.otpExpiry = null;
     await user.save();
 
     return { verified: true };
-},
+  },
 
   async resendOtp(email: string) {
     const user = await AuthRepo.findUserByEmail(email);
@@ -140,7 +137,6 @@ export const AuthService = {
     user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
-    // Send Email With Beautiful HTML Template
     await sendMail(
       email,
       "Your OTP Code",
@@ -149,34 +145,14 @@ export const AuthService = {
 
     return { sent: true };
   },
-  //done
-  async verifyEmail(token: string) {
-    try {
-      const payload: any = TokenUtil.verifyAccessToken(token);
-      if (!payload || payload.action !== "verify_email") {
-        throw new Error("Invalid verification token");
-      }
-      const userId = payload.sub;
-      const user = await AuthRepo.findUserById(userId);
-      if (!user) throw new Error("User not found");
-      if (user.isVerified) throw new Error("Email already verified");
-      
-      await AuthRepo.markUserVerified(userId);
-      return true;
-    } catch (err) {
-      throw new Error("Invalid or expired verification token");
-    }
-  },
 
-  // done
+
   async forgotPassword(email: string) {
     const user = await AuthRepo.findUserByEmail(email);
     if (!user) {
-      // ⚠️ Still return success to prevent email enumeration
       return true;
     }
 
-    // Generate password reset token (JWT, 1 hour expiry)
     const resetToken = TokenUtil.generateAccessToken(
       { sub: user._id, action: "reset_password" },
       "1h"
@@ -208,5 +184,12 @@ export const AuthService = {
     } catch (err) {
       throw new Error("Invalid or expired reset token");
     }
-  }
+  },
+
+  async me(userId: string) {
+    const user = await AuthRepo.findUserById(userId);
+    if (!user) return null;
+    return user;
+}
+
 };

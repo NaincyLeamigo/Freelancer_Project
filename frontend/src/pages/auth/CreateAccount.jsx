@@ -24,14 +24,21 @@ function CreateAccount() {
   const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(''); 
 
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: type === 'checkbox' ? checked : value
+  //   }));
+  //    if (error) setError('');
+  // };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-     if (error) setError('');
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    if (error) setError("");
   };
+
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -41,52 +48,73 @@ function CreateAccount() {
   //   navigate(`/verify-code?email=${encodeURIComponent(formData.email)}`)
   // };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!formData.name.trim()) {
+  //     setError('Please enter your name');
+  //     return;
+  //   }
+    
+  //   if (!formData.email.trim()) {
+  //     setError('Please enter your email');
+  //     return;
+  //   }
+    
+  //   if (!formData.password.trim()) {
+  //     setError('Please enter your password');
+  //     return;
+  //   }
+    
+  //   if (!formData.agreeToTerms) {
+  //     setError('Please agree to Terms & Conditions');
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   setError(''); 
+  //   try {
+  //     const res = await signupAPI({
+  //       email: formData.email,
+  //       password: formData.password,
+  //       role: role,
+  //     });
+
+  //     if (showAppToast) {
+  //       showAppToast('OTP sent to your email. Please check inbox','success');
+  //     } else {
+  //       alert("OTP sent to your email. Please check inbox");
+  //     }
+      
+  //     navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
+  //   } catch (err) {
+  //      const errorMessage = err.response?.data?.message || "Signup failed";
+  //     setError(errorMessage);
+      
+    
+  //     if (showAppToast) {
+  //       showAppToast('error', errorMessage);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name.trim()) return setError("Please enter your name");
+    if (!formData.email.trim()) return setError("Please enter your email");
+    if (!formData.password.trim()) return setError("Please enter your password");
+    if (!formData.agreeToTerms) return setError("Please agree to Terms & Conditions");
 
-    if (!formData.name.trim()) {
-      setError('Please enter your name');
-      return;
-    }
-    
-    if (!formData.email.trim()) {
-      setError('Please enter your email');
-      return;
-    }
-    
-    if (!formData.password.trim()) {
-      setError('Please enter your password');
-      return;
-    }
-    
-    if (!formData.agreeToTerms) {
-      setError('Please agree to Terms & Conditions');
-      return;
-    }
     setLoading(true);
-    setError(''); 
+    setError("");
     try {
-      const res = await signupAPI({
-        email: formData.email,
-        password: formData.password,
-        role: role,
-      });
-
-      if (showAppToast) {
-        showAppToast('OTP sent to your email. Please check inbox','success');
-      } else {
-        alert("OTP sent to your email. Please check inbox");
-      }
-      
+      await signupAPI({ email: formData.email, password: formData.password, role, name: formData.name });
+      showAppToast?.("OTP sent to your email. Please check inbox", "success");
       navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
-       const errorMessage = err.response?.data?.message || "Signup failed";
+      const errorMessage = err.response?.data?.message || err.message || "Signup failed";
       setError(errorMessage);
-      
-    
-      if (showAppToast) {
-        showAppToast('error', errorMessage);
-      }
+      showAppToast?.(errorMessage, "error");
     } finally {
       setLoading(false);
     }

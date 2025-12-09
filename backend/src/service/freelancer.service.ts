@@ -90,4 +90,40 @@ export const FreelancerService = {
     const profile = await FreelancerProfileRepository.completeProfile(user.profileRef.toString());
     return profile;
   },
+  async getAllFreelancers(filters: {
+      category?: string;
+      search?: string;
+      sortBy?: string;
+    }) {
+      const query: any = { profileStatus: "Published" };
+
+      if (filters.category) {
+        query["professionalInfo.category"] = filters.category;
+      }
+
+      if (filters.search) {
+        query.$or = [
+          { "personalInfo.fullName": { $regex: filters.search, $options: "i" } },
+          { "personalInfo.jobTitle": { $regex: filters.search, $options: "i" } },
+          { "professionalInfo.skills.name": { $regex: filters.search, $options: "i" } },
+        ];
+      }
+
+      let sortOption: any = { "stats.rating": -1 };
+      if (filters.sortBy === "rating") {
+        sortOption = { "stats.rating": -1 };
+      } else if (filters.sortBy === "earnings") {
+        sortOption = { "stats.totalEarned": -1 };
+      }
+
+      const freelancers = await FreelancerProfileRepository.findAllWithFilters(query, sortOption);
+      return freelancers;
+    },
+
+  async getFreelancerById(profileId: string) {
+    const profile = await FreelancerProfileRepository.findByIdLean(profileId);
+    if (!profile) throw new Error("Freelancer not found");
+    return profile;
+  },
+
 };

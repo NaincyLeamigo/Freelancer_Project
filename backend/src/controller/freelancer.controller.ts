@@ -1,4 +1,3 @@
-// controllers/freelancer.controller.ts
 import { Request, Response } from "express";
 import { FreelancerService } from "../service/freelancer.service";
 import { responseStatus } from "../helper/response";
@@ -53,4 +52,28 @@ export const FreelancerController = {
       return responseStatus(res, 400, error.message || "Failed to complete profile", null);
     }
   },
+
+  async getAllFreelancers(req: Request, res: Response) {
+  try {
+    const { category, search, sortBy } = req.query;
+    const data = await FreelancerService.getAllFreelancers({
+      category: category as string,
+      search: search as string,
+      sortBy: sortBy as string,
+    });
+    return responseStatus(res, 200, "Freelancers fetched successfully", data);
+  } catch (error: any) {
+    return responseStatus(res, 400, error.message || "Failed to fetch freelancers", null);
+  }
+},
+
+async getFreelancerById(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const data = await FreelancerService.getFreelancerById(id);
+    return responseStatus(res, 200, "Freelancer fetched successfully", data);
+  } catch (error: any) {
+    return responseStatus(res, 400, error.message || "Failed to fetch freelancer", null);
+  }
+},
 };

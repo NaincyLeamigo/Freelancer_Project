@@ -11,23 +11,101 @@ import ProfessionalDetails from '../components/freelanceronboarding/Professional
 import Availability from '../components/freelanceronboarding/Availability.jsx';
 import ActivateProfile from '../components/freelanceronboarding/ActivateProfile.jsx';
 import ProfileComplete from '../components/freelanceronboarding/ProfileComplete.jsx';
+import ExploreTalent from '../components/hirer/ExploreTalent.jsx';
+import { AuthProvider } from '../context/AuthContext.jsx';
+import ProtectedRoute from '../components/ProtectedRoute.jsx';
 
-
+// export default function AppRoutes() {
+//   return (
+//     <Routes>
+//       <Route path="/" element={<Home />} />
+//       <Route path="/create-account" element={<CreateAccount />} />
+//       <Route path="/login" element={<SignIn />} />
+//       <Route path="/verify-otp" element={<VerifyCode/>} />
+//       <Route path="/setup-profile" element={<SetupProfile />} />
+//       <Route path="/profile-information" element={<ProfileInformation />} />
+//       <Route path="/professional-details" element={<ProfessionalDetails/>} />
+//        <Route path="/availability" element={<Availability />} />
+//        <Route path="/activate" element={<ActivateProfile />} />
+//        <Route path="/profile-complete" element={<ProfileComplete/>} />
+//        <Route path="/explore-talent" element={<ExploreTalent/>} />
+   
+//     </Routes>
+//   );
+// }
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/create-account" element={<CreateAccount />} />
-      <Route path="/login" element={<SignIn />} />
-      <Route path="/verify-otp" element={<VerifyCode/>} />
-      <Route path="/setup-profile" element={<SetupProfile />} />
-      <Route path="/profile-information" element={<ProfileInformation />} />
-      <Route path="/professional-details" element={<ProfessionalDetails/>} />
-       <Route path="/availability" element={<Availability />} />
-       <Route path="/activate" element={<ActivateProfile />} />
-       <Route path="/profile-complete" element={<ProfileComplete/>} />
-   
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/verify-otp" element={<VerifyCode />} />
+
+        <Route
+          path="/setup-profile"
+          element={
+            <ProtectedRoute>
+              <SetupProfile/>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile-information"
+          element={
+            <ProtectedRoute>
+              <ProfileInformation />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/professional-details"
+          element={
+            <ProtectedRoute>
+              <ProfessionalDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/availability"
+          element={
+            <ProtectedRoute>
+              <Availability />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/activate"
+          element={
+            <ProtectedRoute>
+              <ActivateProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile-complete"
+          element={
+            <ProtectedRoute>
+              <ProfileComplete />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/explore-talent"
+          element={
+            <ProtectedRoute>
+              <ExploreTalent />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
