@@ -24,14 +24,6 @@ function CreateAccount() {
   const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(''); 
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: type === 'checkbox' ? checked : value
-  //   }));
-  //    if (error) setError('');
-  // };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,64 +32,6 @@ function CreateAccount() {
   };
 
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Form submitted:", formData)
-
-  //   // Navigate to verify code page with email
-  //   navigate(`/verify-code?email=${encodeURIComponent(formData.email)}`)
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!formData.name.trim()) {
-  //     setError('Please enter your name');
-  //     return;
-  //   }
-    
-  //   if (!formData.email.trim()) {
-  //     setError('Please enter your email');
-  //     return;
-  //   }
-    
-  //   if (!formData.password.trim()) {
-  //     setError('Please enter your password');
-  //     return;
-  //   }
-    
-  //   if (!formData.agreeToTerms) {
-  //     setError('Please agree to Terms & Conditions');
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   setError(''); 
-  //   try {
-  //     const res = await signupAPI({
-  //       email: formData.email,
-  //       password: formData.password,
-  //       role: role,
-  //     });
-
-  //     if (showAppToast) {
-  //       showAppToast('OTP sent to your email. Please check inbox','success');
-  //     } else {
-  //       alert("OTP sent to your email. Please check inbox");
-  //     }
-      
-  //     navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
-  //   } catch (err) {
-  //      const errorMessage = err.response?.data?.message || "Signup failed";
-  //     setError(errorMessage);
-      
-    
-  //     if (showAppToast) {
-  //       showAppToast('error', errorMessage);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) return setError("Please enter your name");
@@ -124,25 +58,20 @@ function CreateAccount() {
     if (loading) return; 
     console.log(`Sign up with ${provider}`)
   }
-
-  return (
+ return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8">
-      <BackButton disabled={loading} />
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6 sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-lg">
+        <BackButton disabled={loading} />
+
+        <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-3">Create Account</h1>
         
-        <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-3">
-          Create Account
-        </h1>
-        
-        <p className="text-center text-gray-500 mb-8">
-          Fill your information below or register with your social account.
-        </p>
-         {error && (
+        <p className="text-center text-gray-500 mb-8">Fill your information below or register with your social account.</p>
+
+        {error && (
           <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600 text-sm text-center">{error}</p>
           </div>
         )}
-
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
@@ -175,7 +104,7 @@ function CreateAccount() {
             value={formData.password}
             onChange={handleChange}
             showPassword={showPassword}
-           onTogglePassword={() => !loading && setShowPassword(!showPassword)}
+            onTogglePassword={() => !loading && setShowPassword(!showPassword)}
             disabled={loading}
             required
           />
@@ -187,7 +116,7 @@ function CreateAccount() {
             disabled={loading}
             label={
               <>
-                I agree with{' '}
+                Agree with {''}
                 <Link 
                   to="/terms" 
                   className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
@@ -195,11 +124,19 @@ function CreateAccount() {
                 >
                   Terms & Condition
                 </Link>
+                <span className="mx-0.5">and</span>
+                <Link 
+                  to="/privacy" 
+                  className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
+                  onClick={(e) => loading && e.preventDefault()}
+                >
+                  Privacy Policy
+                </Link>
               </>
             }
           />
 
-           <Button 
+          <Button 
             type="submit" 
             fullWidth
             disabled={loading || !formData.agreeToTerms}
@@ -229,7 +166,7 @@ function CreateAccount() {
                 Creating Account...
               </span>
             ) : 'Sign Up'}
-            </Button>
+          </Button>
         </form>
 
         <div className="mt-8">
@@ -238,20 +175,21 @@ function CreateAccount() {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or sign up with</span>
+              <span className="px-4 bg-white text-gray-500">Or</span>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center gap-4">
-            {/* <SocialButton provider="apple" /> */}
-            <SocialButton provider="google" onClick={() => handleSocialSignup('google')}
-              disabled={loading} />
+          <div className="mt-6 flex justify-center items-center gap-4">
+            <div className="flex justify-center w-full items-center border border-gray-200 px-2 rounded-full">
+              <SocialButton provider="google" disabled={loading} />
+              <span className="text-gray-600">Continue with Google</span>
+            </div>
           </div>
         </div>
 
         <p className="mt-8 text-center text-gray-600">
           Already have an account?{' '}
-         <Link 
+          <Link 
             to="/login" 
             className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700 font-medium'}`}
             onClick={(e) => loading && e.preventDefault()}

@@ -18,57 +18,9 @@ function SignIn() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: type === 'checkbox' ? checked : value
-  //   }));
-  // };
-
-    // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log('Login attempt:', formData);
-  //   // Yahan aap login API call kar sakti hain
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  // if (!formData.email || !formData.password) {
-  //     alert('Please fill in all fields');
-  //     return;
-  //   }
-    
-  //   setLoading(true); 
-  //   try {
-  //     const res = await signinAPI({
-  //       email: formData.email,
-  //       password: formData.password,
-  //     });
-  //     // console.log("LOGIN SUCCESS:", res.data);
-  //     const { accessToken, refreshToken } = res.data.data.tokens;
-
-  //     localStorage.setItem("accessToken", accessToken);
-  //     localStorage.setItem("refreshToken", refreshToken);
-  //     if (showAppToast) {
-  //       showAppToast('Login successfully','success');
-  //     } else {
-  //       alert("Login successfully");
-  //     }
-  //     navigate("/profile-information");
-  //   } catch (err) {
-  //     console.log("LOGIN ERROR:", err.response?.data);
-  //     alert(err.response?.data?.message || "Login failed");
-  //   }
-  //   finally {
-  //     setLoading(false); 
-  //   }
-  // };
-
-
-    const handleChange = (e) => {
+  const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
       setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
@@ -86,7 +38,7 @@ function SignIn() {
       if (user) {
         showAppToast?.("Login successful", "success");
         if (user.role === "freelancer") {
-          navigate("/profile-information");
+          navigate("/setup-profile");
         } else if (user.role === "hirer") {
           navigate("/explore-talent");
         } else {
@@ -102,11 +54,11 @@ function SignIn() {
       setLoading(false);
     }
   };
-
+ 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8">
-        <BackButton />
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6">
+        <BackButton disabled={loading} />
 
         <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-3">
           Sign In
@@ -124,7 +76,8 @@ function SignIn() {
             placeholder="example@gmail.com"
             value={formData.email}
             onChange={handleChange}
-            disabled={loading} 
+            disabled={loading}
+            className="w-full"
           />
 
           <div className="relative">
@@ -137,16 +90,11 @@ function SignIn() {
               onChange={handleChange}
               showPassword={showPassword}
               onTogglePassword={() => !loading && setShowPassword(!showPassword)}
-              disabled={loading} 
+              disabled={loading}
+              className="w-full"
             />
             <div className="text-right mt-1">
-              {/* <Link
-                to="/forgot-password"
-                className="text-sm text-indigo-600 hover:text-indigo-700"
-              >
-                Forgot password?
-              </Link> */}
-               <Link
+              <Link
                 to="/forgot-password"
                 className={`text-sm ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
                 onClick={(e) => loading && e.preventDefault()} 
@@ -162,11 +110,11 @@ function SignIn() {
               checked={formData.rememberMe}
               onChange={handleChange}
               label="Remember me"
-               disabled={loading}
+              disabled={loading}
             />
           </div>
 
-          <Button type="submit" fullWidth  disabled={loading} >
+          <Button type="submit" fullWidth disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
@@ -177,23 +125,22 @@ function SignIn() {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or sign in with</span>
+              <span className="px-4 bg-white text-gray-500">Or</span>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center gap-4">
-            {/* <SocialButton provider="apple" /> */}
-            <SocialButton provider="google" disabled={loading}/>
+          <div className="mt-6 flex justify-center items-center gap-4">
+            <div className='flex justify-center w-full items-center border border-gray-200 px-2 rounded-full'>
+              <SocialButton provider="google" disabled={loading} />
+              <span className='text-gray-600'>Continue with Google</span>
+            </div>
           </div>
         </div>
 
         <p className="mt-8 text-center text-gray-600">
           Don’t have an account?{' '}
-          {/* <Link to="/create-account" className="text-indigo-600 hover:text-indigo-700 font-medium">
-            Sign up
-          </Link> */}
-           <Link 
-            to="/create-account" 
+          <Link
+            to="/create-account"
             className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700 font-medium'}`}
             onClick={(e) => loading && e.preventDefault()} 
           >

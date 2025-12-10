@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 
 
 export type SkillLevel = "Beginner" | "Intermediate" | "Expert";
-export type LanguageLevel = "Basic" | "Fluent" | "Native";
+export type LanguageLevel = "Beginner" | "Fluent" | "Native" | "Intermediate";
 export type WeekDay = "Sun" | "Mon" | "Tue" | "Wed" | "Thur" | "Fri" | "Sat";
 
 
@@ -149,7 +149,7 @@ const freelancerProfileSchema = new mongoose.Schema<FreelancerProfileModel>(
         type: [
           {
             name: { type: String },
-            level: { type: String, enum: ["Basic", "Fluent", "Native"] },
+            level: { type: String, enum: ["Beginner", "Fluent", "Native", "Intermediate"] },
           },
         ],
         default: [],

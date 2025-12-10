@@ -22,6 +22,7 @@ export const showAppToast = (message, type = 'info') => {
       padding: '14px 16px',
       margin: '8px',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+      width:"300px",
     },
     progressStyle: {
       background: 'rgba(255, 255, 255, 0.3)',
