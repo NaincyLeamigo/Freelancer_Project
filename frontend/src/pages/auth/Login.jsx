@@ -60,7 +60,7 @@ function SignIn() {
       <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6">
         <BackButton disabled={loading} />
 
-        <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-3">
+        <h1 className="text-3xl font-medium text-center text-gray-900 mb-3">
           Sign In
         </h1>
 
@@ -93,10 +93,10 @@ function SignIn() {
               disabled={loading}
               className="w-full"
             />
-            <div className="text-right mt-1">
+            <div className="text-right mt-1 ">
               <Link
                 to="/forgot-password"
-                className={`text-sm ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
+                className={`text-sm ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
                 onClick={(e) => loading && e.preventDefault()} 
               >
                 Forgot password?
@@ -119,7 +119,7 @@ function SignIn() {
           </Button>
         </form>
 
-        <div className="mt-8">
+        <div className="pt-2">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
@@ -129,7 +129,7 @@ function SignIn() {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-4 mt-8">
             <div className='flex justify-center w-full items-center border border-gray-200 px-2 rounded-full'>
               <SocialButton provider="google" disabled={loading} />
               <span className='text-gray-600'>Continue with Google</span>
@@ -137,11 +137,11 @@ function SignIn() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-gray-600">
+        <p className="pt-4 text-center text-gray-600">
           Don’t have an account?{' '}
           <Link
             to="/create-account"
-            className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700 font-medium'}`}
+            className={`ml-1 ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
             onClick={(e) => loading && e.preventDefault()} 
           >
             Sign up

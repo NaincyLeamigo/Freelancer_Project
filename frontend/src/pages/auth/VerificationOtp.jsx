@@ -25,7 +25,6 @@ export default function VerifyCode() {
     return () => clearInterval(timer)
   }, [cooldown])
 
-  // ---------------- VERIFY OTP ----------------
   const handleVerify = async (e) => {
     e.preventDefault()
 
@@ -43,7 +42,6 @@ export default function VerifyCode() {
     }
   }
 
-  // ---------------- RESEND OTP ----------------
   const handleResendCode = async () => {
     if (cooldown > 0) return
 
@@ -56,7 +54,7 @@ export default function VerifyCode() {
       } else {
         alert("A new OTP has been sent to your email!");
       }
-      setCooldown(30)  // 30 second cooldown
+      setCooldown(30) 
     } catch (err) {
       alert(err.response?.data?.message || "Failed to resend OTP")
     }
@@ -68,11 +66,9 @@ export default function VerifyCode() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6 sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-lg">
 
-        <div className="mb-8">
-          <BackButton />
-        </div>
+         <BackButton />
 
-        <div className="text-center mb-8">
+        <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-3">Verify Code</h1>
           <p className="text-gray-500 text-base">
             Enter the code sent to <span className="text-gray-700 font-medium">{email}</span>
@@ -88,7 +84,7 @@ export default function VerifyCode() {
               type="button"
               onClick={handleResendCode}
               disabled={isResending || cooldown > 0}
-              className="text-gray-900 font-medium underline hover:text-indigo-600 transition-colors disabled:opacity-50"
+              className="text-gray-900 font-medium underline hover:text-indigo-700 transition-colors disabled:opacity-50"
             >
               {isResending
                 ? "Sending..."
@@ -101,7 +97,7 @@ export default function VerifyCode() {
           <button
             type="submit"
             disabled={otp.length !== 4}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold text-lg py-4 rounded-full transition-colors"
+            className="w-full bg-[#5A4DFF] hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold text-lg py-4 rounded-full transition-colors"
           >
             Verify
           </button>

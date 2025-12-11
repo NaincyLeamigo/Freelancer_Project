@@ -58,22 +58,20 @@ function CreateAccount() {
     if (loading) return; 
     console.log(`Sign up with ${provider}`)
   }
- return (
+  return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6 sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-lg">
-        <BackButton disabled={loading} />
+      <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-8 space-y-6">
 
-        <h1 className="text-3xl font-bold text-center text-gray-900 mt-6 mb-3">Create Account</h1>
-        
+        <BackButton disabled={loading}/>
+        <h1 className="text-3xl font-medium text-center text-[#0A0A0A] mb-3">Create Account</h1>
         <p className="text-center text-gray-500 mb-8">Fill your information below or register with your social account.</p>
-
         {error && (
           <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600 text-sm text-center">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <Input
             label="Name"
             type="text"
@@ -119,15 +117,15 @@ function CreateAccount() {
                 Agree with {''}
                 <Link 
                   to="/terms" 
-                  className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
+                  className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
                   onClick={(e) => loading && e.preventDefault()}
                 >
                   Terms & Condition
                 </Link>
-                <span className="mx-0.5">and</span>
+                <span className="mx-1">and</span>
                 <Link 
                   to="/privacy" 
-                  className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700'}`}
+                  className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
                   onClick={(e) => loading && e.preventDefault()}
                 >
                   Privacy Policy
@@ -139,16 +137,14 @@ function CreateAccount() {
           <Button 
             type="submit" 
             fullWidth
-            disabled={loading || !formData.agreeToTerms}
-          >
+            disabled={loading || !formData.agreeToTerms}>
             {loading ? (
               <span className="flex items-center justify-center">
                 <svg 
                   className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" 
                   xmlns="http://www.w3.org/2000/svg" 
                   fill="none" 
-                  viewBox="0 0 24 24"
-                >
+                  viewBox="0 0 24 24">
                   <circle 
                     className="opacity-25" 
                     cx="12" 
@@ -169,17 +165,17 @@ function CreateAccount() {
           </Button>
         </form>
 
-        <div className="mt-8">
+        <div className="pt-4">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t-2 border-[#E5E7EB]"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-white text-gray-500">Or</span>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-4 mt-8">
             <div className="flex justify-center w-full items-center border border-gray-200 px-2 rounded-full">
               <SocialButton provider="google" disabled={loading} />
               <span className="text-gray-600">Continue with Google</span>
@@ -187,16 +183,16 @@ function CreateAccount() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-gray-600">
+        <div className="text-gray-600 flex justify-center items-center pt-2">
           Already have an account?{' '}
           <Link 
             to="/login" 
-            className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-indigo-600 hover:text-indigo-700 font-medium'}`}
-            onClick={(e) => loading && e.preventDefault()}
-          >
+            className={`ml-1 ${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
+            onClick={(e) => loading && e.preventDefault()}>
             Sign in
           </Link>
-        </p>
+        </div>
+
       </div>
     </div>
   );

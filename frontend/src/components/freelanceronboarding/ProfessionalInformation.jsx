@@ -6,6 +6,8 @@ import { ArrowLeft, Megaphone, Code, Paintbrush, FileText, ChevronRight, Plus, L
 import { saveProfessionalInfoAPI } from '../../api/FreelancerProfileAPI';
 import CustomDropdown from './CustomDropdown';
 import Modal from './Modal';
+import BackButton from '../ui/BackButton';
+import Button from '../ui/Button';
 
 export default function ProfessionalDetails() {
   const navigate = useNavigate();
@@ -93,21 +95,25 @@ export default function ProfessionalDetails() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-gray-50 rounded-3xl shadow-sm p-4 pb-6">
         {/* Header */}
-        <div className="max-w-2xl mx-auto px-4 py-4">
-          <div className="flex items-center mb-4">
-            <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <h1 className="flex-1 text-xl font-semibold text-center mr-8">Professional Details</h1>
+         <div className="flex justify-between items-center w-full">
+            <BackButton/>
+            <h1 className="text-2xl text-center font-medium text-[#0A0A0A] mr-8">Professional Details</h1>
+            <div></div>
+        </div>
+
+        <div className="flex mb-4 w-full justify-center items-center mt-8">
+          <div className="flex gap-2  w-full ml-16 mr-16">
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-400 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
+            <div className="flex-1 h-2 bg-gray-200 rounded-full"></div>
           </div>
         </div>
 
-        <div className="max-w-2xl mx-auto px-4 py-6 space-y-8">
+        <div className="max-w-2xl mx-auto px-4 py-6 space-y-10">
           {/* Categories */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">What is your main category?</h2>
+            <h2 className="text-lg text-[#101828] font-medium mb-2">What is your main category?</h2>
             <div className="grid grid-cols-4 gap-3">
               {categories.map((cat) => {
                 const IconComponent = cat.icon;
@@ -119,18 +125,18 @@ export default function ProfessionalDetails() {
                   >
                     <div
                       className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-sm mb-2 ${
-                        selectedCategory === cat.name ? 'bg-indigo-100' : 'bg-white'
+                        selectedCategory === cat.name ? 'bg-[#E8E6FF]' : 'bg-white'
                       }`}
                     >
                       <IconComponent
                         className={`w-5 h-5 ${
-                          selectedCategory === cat.name ? 'text-indigo-600' : 'text-gray-600'
+                          selectedCategory === cat.name ? 'text-[#5A4DFF]' : 'text-[#4A5565]'
                         }`}
                       />
                     </div>
                     <span
-                      className={`text-base font-medium ${
-                        selectedCategory === cat.name ? 'text-indigo-600' : 'text-gray-700'
+                      className={`text-base font-normal ${
+                        selectedCategory === cat.name ? 'text-[#5A4DFF]' : 'text-[#4A5565]'
                       }`}
                     >
                       {cat.name}
@@ -143,11 +149,11 @@ export default function ProfessionalDetails() {
 
           {/* Services */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">What Services do you offer?</h2>
+            <h2 className="text-[#101828] font-medium mb-2 text-lg">What Services do you offer?</h2>
             <div className="space-y-3">
               {services.map((service, index) => (
-                <div key={index} className="bg-white rounded-2xl p-6 flex items-center justify-between shadow-sm">
-                  <span className="text-gray-900 text-lg font-medium">{service}</span>
+                <div key={index} className="bg-white border rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                  <span className="text-[#101828] text-lg font-normal">{service}</span>
                   <button onClick={() => removeService(index)} className="text-gray-400 hover:text-gray-600">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -157,22 +163,22 @@ export default function ProfessionalDetails() {
               ))}
               <button
                 onClick={openServiceModal}
-                className="text-indigo-600 font-medium text-lg flex items-center gap-2 hover:text-indigo-700"
+                className="text-[#5A4DFF] font-normal text-lg flex items-center gap-2 hover:text-indigo-700"
               >
-                <span className="">+</span> Add
+                <span className="">+</span> Add another
               </button>
             </div>
           </div>
 
           {/* Skills */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">What Skills do you offer?</h2>
-            <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <h2 className="text-lg text-[#101828] font-medium mb-2">What Skills do you offer?</h2>
+            <div className="bg-white border rounded-2xl p-4 shadow-sm">
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-2 px-4 py-1 bg-indigo-100 text-indigo-600 rounded-full text-lg font-medium"
+                    className="inline-flex items-center gap-4 px-3 py-1 bg-[#E8E6FF] text-[#5A4DFF] rounded-full text-base font-normal"
                   >
                     {skill}
                     <button onClick={() => removeSkill(skill)} className="hover:bg-indigo-200 rounded-full p-0.5">
@@ -184,7 +190,7 @@ export default function ProfessionalDetails() {
                 ))}
                 <button
                   onClick={openSkillModal}
-                  className="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-full text-sm font-medium"
+                  className="px-4 py-2 text-[#5A4DFF] hover:bg-[#E8E6FF] rounded-full text-sm font-medium"
                 >
                   + Add
                 </button>
@@ -194,30 +200,29 @@ export default function ProfessionalDetails() {
 
           {/* Languages */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">What Languages do you speak?</h2>
+            <h2 className="text-lg text-[#101828] font-medium mb-2">What Languages do you speak?</h2>
             <div className="space-y-3">
               {languages.map((lang, index) => (
-                <div key={index} className="flex gap-3">
-                  {/* Language Dropdown */}
+                <div key={index} className="flex gap-[12px]">
+               
                   <CustomDropdown
                     value={lang.language}
-                    onChange={(value) => updateLanguage(index, 'language', value)}
+                     onChange={(e) => updateLanguage(index, 'language', e.target.value)}
                     options={["English", "Spanish", "French", "German", "Chinese", "Hindi"]}
-                    placeholder="Select language"
+                    placeholder="Language"
                   />
 
-                  {/* Proficiency Dropdown */}
                   <CustomDropdown
                     value={lang.proficiency}
-                    onChange={(value) => updateLanguage(index, 'proficiency', value)}
+                    onChange={(e) => updateLanguage(index, 'proficiency', e.target.value)}
                     options={["Beginner", "Intermediate", "Fluent", "Native"]}
-                    placeholder="Select proficiency"
+                    placeholder="Proficiency"
                   />
                 </div>
               ))}
               <button
                 onClick={addLanguage}
-                className="text-indigo-600 font-medium text-sm flex items-center gap-1 hover:text-indigo-700"
+                className="text-[#5A4DFF] font-medium text-sm flex items-center gap-1 hover:text-indigo-700"
               >
                 <span className="text-xl">+</span> Add another
               </button>
@@ -226,7 +231,7 @@ export default function ProfessionalDetails() {
 
           {/* Portfolio Link */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Portfolio Link</h2>
+            <h2 className="text-lg text-[#101828] font-medium mb-2">Portfolio Link</h2>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +257,7 @@ export default function ProfessionalDetails() {
           <div className="max-w-2xl mx-auto mt-16">
             <button
               onClick={handleNext}
-              className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-full shadow-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="w-full py-4 bg-[#5A4DFF] text-white font-semibold rounded-full shadow-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Next
             </button>
