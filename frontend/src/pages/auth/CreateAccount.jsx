@@ -114,20 +114,18 @@ function CreateAccount() {
             disabled={loading}
             label={
               <>
-                Agree with {''}
+                I agree with {''}
                 <Link 
                   to="/terms" 
                   className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
-                  onClick={(e) => loading && e.preventDefault()}
-                >
+                  onClick={(e) => loading && e.preventDefault()}>
                   Terms & Condition
                 </Link>
-                <span className="mx-1">and</span>
+                    {''} and {''}
                 <Link 
                   to="/privacy" 
                   className={`${loading ? 'text-gray-400 cursor-not-allowed' : 'text-[#5A4DFF] hover:text-indigo-700'}`}
-                  onClick={(e) => loading && e.preventDefault()}
-                >
+                  onClick={(e) => loading && e.preventDefault()}>
                   Privacy Policy
                 </Link>
               </>
@@ -171,7 +169,7 @@ function CreateAccount() {
               <div className="w-full border-t-2 border-[#E5E7EB]"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or</span>
+              <span className="px-4 bg-gray-50 text-gray-500">Or</span>
             </div>
           </div>
 

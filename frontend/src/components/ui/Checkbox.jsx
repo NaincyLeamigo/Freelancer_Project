@@ -1,6 +1,6 @@
 function Checkbox({ name, checked, onChange, label }) {
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex w-full gap-2 ">
       <div className="relative flex items-center h-6">
         <input
           id={name}

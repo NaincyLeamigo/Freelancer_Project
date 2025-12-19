@@ -27,8 +27,12 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      alert("Please fill in all fields");
+    if (!formData.password) {
+      showAppToast?.("Please fill your password", "warning");
+      return;
+    }
+    if (!formData.email) {
+      showAppToast?.("Please fill your email", "warning");
       return;
     }
 
@@ -49,7 +53,8 @@ function SignIn() {
       }
     } catch (err) {
       const msg = err?.response?.data?.message || err.message || "Login failed";
-      alert(msg);
+      // alert(msg);
+      showAppToast?.("Login failed", "error");
     } finally {
       setLoading(false);
     }
